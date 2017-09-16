@@ -35,16 +35,16 @@ print_archs()
 ########################################
 save_selected_jails()
 {
-	local versions=$1
-	local archs=$2
+	local versions=${1}
+	local archs=${2}
 	local selected
 
-	local filter=$(echo $versions | sed -e 's/ /|/g')
+	local filter=$(echo ${versions} | sed -e 's/ /|/g')
 
-	for arch in $archs; do
-		selected=$(echo $(poudriere jails -l | grep $arch \
-			| egrep "$filter" | awk '{print $1;}'))
-		echo $selected >> $SAVED_JAILS_FILE
+	for arch in ${archs}; do
+		selected=$(echo $(poudriere jails -l | grep ${arch} \
+			| egrep "${filter}" | awk '{print $1;}'))
+		echo ${selected} >> ${SAVED_JAILS_FILE}
 	done
 }
 
@@ -57,7 +57,7 @@ save_selected_jails()
 ########################################
 cleanup()
 {
-	rm $SAVED_JAILS_FILE $SAVED_PORT_FILE &> /dev/null
+	rm ${SAVED_JAILS_FILE} ${SAVED_PORT_FILE} &> /dev/null
 }
 
 ########################################
@@ -70,7 +70,7 @@ select_port()
 {
 	echo -n "Select port: "
 	read PORT
-	echo $PORT > $SAVED_PORT_FILE
+	echo ${PORT} > ${SAVED_PORT_FILE}
 }
 
 ########################################
@@ -87,11 +87,11 @@ select_versions()
 	echo -n "Select versions (default All): " >&2
 	read user_selected_versions
 
-	if [[ -z $user_selected_versions ]];then
-		user_selected_versions="$all_versions"
+	if [[ -z ${user_selected_versions} ]];then
+		user_selected_versions="${all_versions}"
 	fi
 
-	echo "$user_selected_versions"
+	echo "${user_selected_versions}"
 }
 
 ########################################
@@ -108,11 +108,11 @@ select_archs()
 	echo -n "Select architectures (default All): " >&2
 	read user_selected_archs
 
-	if [[ -z $user_selected_archs ]];then
-		user_selected_archs="$all_archs"
+	if [[ -z ${user_selected_archs} ]];then
+		user_selected_archs="${all_archs}"
 	fi
 	
-	echo "$user_selected_archs"
+	echo "${user_selected_archs}"
 }
 
 ####################
@@ -136,9 +136,9 @@ echo
 echo -n "Select max concurrency: "
 read MAX_PROCS
 
-save_selected_jails "$SELECTED_VERSIONS" "$SELECTED_ARCHS"
+save_selected_jails "${SELECTED_VERSIONS}" "${SELECTED_ARCHS}"
 
 # Stream workers through xargs
-cat $SAVED_JAILS_FILE | xargs -n1 -P$MAX_PROCS ./build_worker.sh 
+cat ${SAVED_JAILS_FILE} | xargs -n1 -P${MAX_PROCS} ./build_worker.sh 
 
 cleanup
