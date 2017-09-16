@@ -6,13 +6,14 @@ JAIL_NAME=$1
 PORT_NAME=$(cat $SAVED_PORT_FILE)
 STATUS_FILE="${JAIL_NAME}"_exit_status
 POUDRIERE_CMD="poudriere testport -p default -j ${JAIL_NAME} -o ${PORT_NAME} && touch ${STATUS_FILE}"
+WINDOW_TITLE="-T ${PORT_NAME}_[${JAIL_NAME}]"
 
 # Ensure we don't have a status file from a past compilation
 rm "${STATUS_FILE}" 2>/dev/null
 
 echo "Building ${PORT_NAME} for ${JAIL_NAME}... "
 
-${TERMINAL_CMD}"${POUDRIERE_CMD}"
+${TERMINAL_CMD}"${POUDRIERE_CMD}"" ${WINDOW_TITLE}"
 
 ret_str="${C_RED}FAILED${C_RESTORE}"
 
