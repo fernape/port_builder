@@ -2,6 +2,25 @@
 
 source config.sh
 
+########################################
+# Print build result
+# Input: $1 Jail name
+#	 $2 build result
+# Globals: none
+########################################
+print_build_result()
+{
+	local jail_name=${1}
+	local build_result=${2}
+
+	if [[ "${build_result}" == "OK"  ]]; then
+		echo -e "${jail_name} done [${C_GREEN}OK${C_RESTORE}]"
+	else
+		echo -e "${jail_name} done [${C_RED}FAILED${C_RESTORE}]"
+	fi
+
+}
+
 JAIL_NAME=$1
 PORT_NAME=$(cat $SAVED_PORT_FILE)
 NOTIFY_USER=$(cat $SAVED_NOTIFY_USER)
@@ -16,13 +35,15 @@ echo "Building ${PORT_NAME} for ${JAIL_NAME}... "
 
 ${TERMINAL_CMD}"${POUDRIERE_CMD}"" ${WINDOW_TITLE}"
 
-ret_str="${C_RED}FAILED${C_RESTORE}"
+ret_str="FAILED"
 
 if [[ -f ${STATUS_FILE} ]]; then
-	ret_str="${C_GREEN}OK${C_RESTORE}"
+	ret_str="OK"
 fi
 
-echo -e "${JAIL_NAME} done [${ret_str}]"
+print_build_result "${JAIL_NAME}" "${ret_str}"
+
+./notify.sh ${NOTIFY_USER} "${PORT_NAME} build on ${JAIL_NAME} finished [$ret_str]"
+
 rm ${STATUS_FILE} 2>/dev/null
 
-./notify.sh ${NOTIFY_USER} "${PORT_NAME} build on ${JAIL_NAME} finished"
