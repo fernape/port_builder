@@ -4,6 +4,7 @@ source config.sh
 
 JAIL_NAME=$1
 PORT_NAME=$(cat $SAVED_PORT_FILE)
+NOTIFY_USER=$(cat $SAVED_NOTIFY_USER)
 STATUS_FILE="${JAIL_NAME}"_exit_status
 POUDRIERE_CMD="poudriere testport -p default -j ${JAIL_NAME} -o ${PORT_NAME} && touch ${STATUS_FILE}"
 WINDOW_TITLE="-T ${PORT_NAME}_[${JAIL_NAME}]"
@@ -23,3 +24,5 @@ fi
 
 echo -e "${JAIL_NAME} done [${ret_str}]"
 rm ${STATUS_FILE} 2>/dev/null
+
+./notify.sh ${NOTIFY_USER} "${PORT_NAME} build on ${JAIL_NAME} finished"
