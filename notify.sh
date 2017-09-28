@@ -9,4 +9,4 @@ if [[ $# -ne 2 ]];then
 	echo Usage $0 destination_peer message
 fi
 
-${TG_BIN} -Wk ${PUB_KEY} -e "msg ${TO} \"${MSG}\"" &> /dev/null
+${TG_BIN} -Wk ${PUB_KEY} -e "msg ${TO} \"${MSG}\""

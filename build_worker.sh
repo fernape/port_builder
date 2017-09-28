@@ -43,7 +43,7 @@ fi
 
 print_build_result "${JAIL_NAME}" "${ret_str}"
 
-./notify.sh ${NOTIFY_USER} "${PORT_NAME} build on ${JAIL_NAME} finished [$ret_str]"
+./notify.sh ${NOTIFY_USER} "${PORT_NAME} build on ${JAIL_NAME} finished [$ret_str]" &> /dev/null
 
 rm ${STATUS_FILE} 2>/dev/null
 
