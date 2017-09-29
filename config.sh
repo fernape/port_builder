@@ -4,7 +4,8 @@ set -u
 # Temporal file names
 SAVED_JAILS_FILE=saved_jails
 SAVED_PORT_FILE=saved_port_name
-SAVED_NOTIFY_USER=notify_user
+TG_CHATID_FILE=~/.telegram/chatid
+TG_KEY_FILE=~/.telegram/key
 
 #TERMINAL_CMD="terminology --exec "
 TERMINAL_CMD="xterm -e "
