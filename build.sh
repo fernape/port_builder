@@ -58,7 +58,7 @@ save_selected_jails()
 ########################################
 cleanup()
 {
-	rm ${SAVED_JAILS_FILE} ${SAVED_PORT_FILE} ${SAVED_NOTIFY_USER} &> /dev/null
+	rm ${SAVED_JAILS_FILE} ${SAVED_PORT_FILE} &> /dev/null
 }
 
 ########################################
@@ -138,11 +138,6 @@ echo -n "Select max concurrency: "
 read MAX_PROCS
 
 save_selected_jails "${SELECTED_VERSIONS}" "${SELECTED_ARCHS}"
-
-echo
-echo -n "Select user to notify: "
-read NOTIFY_USER
-echo ${NOTIFY_USER} > ${SAVED_NOTIFY_USER}
 
 # Stream workers through xargs
 cat ${SAVED_JAILS_FILE} | xargs -n1 -P${MAX_PROCS} ./build_worker.sh 

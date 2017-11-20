@@ -23,7 +23,6 @@ print_build_result()
 
 JAIL_NAME=$1
 PORT_NAME=$(cat $SAVED_PORT_FILE)
-NOTIFY_USER=$(cat $SAVED_NOTIFY_USER)
 STATUS_FILE="${JAIL_NAME}"_exit_status
 POUDRIERE_CMD="poudriere testport -p default -j ${JAIL_NAME} -o ${PORT_NAME} && touch ${STATUS_FILE}"
 WINDOW_TITLE="-T ${PORT_NAME}_[${JAIL_NAME}]"
@@ -43,7 +42,7 @@ fi
 
 print_build_result "${JAIL_NAME}" "${ret_str}"
 
-./notify.sh ${NOTIFY_USER} "${PORT_NAME} build on ${JAIL_NAME} finished [$ret_str]" &> /dev/null
+./notify.sh "${PORT_NAME} build on ${JAIL_NAME} finished [$ret_str]" &> /dev/null
 
 rm ${STATUS_FILE} 2>/dev/null
 
