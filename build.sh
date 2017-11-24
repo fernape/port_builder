@@ -43,7 +43,7 @@ save_selected_jails()
 
 	for arch in ${archs}; do
 		selected=$(echo $(poudriere jails -l | grep ${arch} \
-			| egrep "${filter}" | awk '{print $1;}'))
+			| awk '{print $1;}' | egrep "${filter}" ))
 		echo ${selected} >> ${SAVED_JAILS_FILE}
 	done
 }
