@@ -1,6 +1,7 @@
 #!/usr/local/bin/bash
 
 source config.sh
+source common.sh
 
 ########################################
 # Print available versions
@@ -116,6 +117,7 @@ select_archs()
 	echo "${user_selected_archs}"
 }
 
+
 ####################
 # Main entry point #
 ####################
@@ -140,6 +142,8 @@ read MAX_PROCS
 save_selected_jails "${SELECTED_VERSIONS}" "${SELECTED_ARCHS}"
 
 # Stream workers through xargs
-cat ${SAVED_JAILS_FILE} | xargs -n1 -P${MAX_PROCS} ./build_worker.sh 
+cat ${SAVED_JAILS_FILE} | xargs -n1 -P${MAX_PROCS} ./build_worker.sh
+
+./notify.sh $(./db_get_shared_link.sh $(get_canonical_port_name $(cat ${SAVED_PORT_FILE})))
 
 cleanup

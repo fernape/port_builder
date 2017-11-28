@@ -2,7 +2,6 @@
 
 source config.sh
 
-CURL_BIN="$(whereis -q curl | cut -f1 -d' ')"
 MSG=${1}
 CHATID="$(cat ${TG_CHATID_FILE})"
 KEY="$(cat ${TG_KEY_FILE})"

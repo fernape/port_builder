@@ -1,6 +1,7 @@
 #!/usr/local/bin/bash
 
 source config.sh
+source common.sh
 
 ########################################
 # Print build result
@@ -21,10 +22,26 @@ print_build_result()
 
 }
 
+################################################################
+# Upload generated logs
+# Input: None
+# Output: None
+# Globals: PORT_NAME, LOGS_BASE, JAIL_NAME, PORTS_COLLECTION
+################################################################
+upload_logs()
+{
+	local upload_dir=$(get_canonical_port_name ${PORT_NAME})
+	local port_name=$(echo ${upload_dir} | cut -f1 -d'-')
+	local port_version=$(echo ${upload_dir} | cut -f2 -d'-')
+	local logs_dir="${LOGS_BASE}/${port_name}/${port_version}"
+
+	./db_upload_file.sh "${logs_dir}/${JAIL_NAME}-${PORTS_COLLECTION}.log" ${upload_dir} &>/dev/null
+}
+
 JAIL_NAME=$1
 PORT_NAME=$(cat $SAVED_PORT_FILE)
 STATUS_FILE="${JAIL_NAME}"_exit_status
-POUDRIERE_CMD="poudriere testport -p default -j ${JAIL_NAME} -o ${PORT_NAME} && touch ${STATUS_FILE}"
+POUDRIERE_CMD="poudriere testport -p ${PORTS_COLLECTION} -j ${JAIL_NAME} -o ${PORT_NAME} && touch ${STATUS_FILE}"
 WINDOW_TITLE="-T ${PORT_NAME}_[${JAIL_NAME}]"
 
 # Ensure we don't have a status file from a past compilation
@@ -40,6 +57,7 @@ if [[ -f ${STATUS_FILE} ]]; then
 	ret_str="OK"
 fi
 
+upload_logs
 print_build_result "${JAIL_NAME}" "${ret_str}"
 
 ./notify.sh "${PORT_NAME} build on ${JAIL_NAME} finished [$ret_str]" &> /dev/null
