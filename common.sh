@@ -6,5 +6,12 @@ get_canonical_port_name()
 {
 	local port_name=$(basename ${1})
 	local port_version=$(make -C ${PORTS_BASE}/${1} -V PORTVERSION)
-	echo "${port_name}-${port_version}"
+	local port_revision=$(make -C ${PORTS_BASE}/${1} -V PORTREVISION)
+
+	local extra_suffix=""
+	if [[ ! -z "${port_revision}" ]]; then
+		extra_suffix="_${port_revision}"
+	fi
+
+	echo "${port_name}-${port_version}${extra_suffix}"
 }
