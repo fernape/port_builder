@@ -9,7 +9,7 @@ get_canonical_port_name()
 	local port_revision=$(make -C ${PORTS_BASE}/${1} -V PORTREVISION)
 
 	local extra_suffix=""
-	if [[ ! -z "${port_revision}" ]]; then
+	if [[ ! -z "${port_revision}" && "${port_revision}" != "0" ]]; then
 		extra_suffix="_${port_revision}"
 	fi
 
