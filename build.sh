@@ -39,13 +39,14 @@ save_selected_jails()
 	local versions=${1}
 	local archs=${2}
 	local selected
+	local filter
 
-	local filter=$(echo ${versions} | sed -e 's/ /|/g')
+	filter="${versions// /|}"
 
 	for arch in ${archs}; do
-		selected=$(echo $(poudriere jails -l | grep ${arch} \
-			| awk '{print $1;}' | egrep "${filter}" ))
-		echo ${selected} >> ${SAVED_JAILS_FILE}
+		selected=$(echo "$(poudriere jails -l | grep "${arch}" \
+			| awk '{print $1;}' | grep -E "${filter}" )")
+		echo "${selected}" >> "${SAVED_JAILS_FILE}"
 	done
 }
 
@@ -59,7 +60,7 @@ save_selected_jails()
 ########################################
 cleanup()
 {
-	rm ${SAVED_JAILS_FILE} ${SAVED_PORT_FILE} &> /dev/null
+	rm "${SAVED_JAILS_FILE}" "${SAVED_PORT_FILE}" &> /dev/null
 }
 
 ########################################
@@ -71,8 +72,8 @@ cleanup()
 select_port()
 {
 	echo -n "Select port: "
-	read PORT
-	echo ${PORT} > ${SAVED_PORT_FILE}
+	read -r PORT
+	echo "${PORT}" > "${SAVED_PORT_FILE}"
 }
 
 ########################################
@@ -83,11 +84,13 @@ select_port()
 ########################################
 select_versions()
 {
-	local all_versions=$(print_versions)
+	local all_versions
+
+	all_versions=$(print_versions)
 	echo >&2
 	echo "${all_versions}" >&2
 	echo -n "Select versions (default All): " >&2
-	read user_selected_versions
+	read -r user_selected_versions
 
 	if [[ -z ${user_selected_versions} ]];then
 		user_selected_versions="${all_versions}"
@@ -104,11 +107,13 @@ select_versions()
 ########################################
 select_archs()
 {
-	local all_archs=$(print_archs)
+	local all_archs
+
+	all_archs=$(print_archs)
 	echo >&2
 	echo "${all_archs}" >&2
 	echo -n "Select architectures (default All): " >&2
-	read user_selected_archs
+	read -r user_selected_archs
 
 	if [[ -z ${user_selected_archs} ]];then
 		user_selected_archs="${all_archs}"
@@ -137,13 +142,13 @@ SELECTED_ARCHS=$(select_archs)
 
 echo
 echo -n "Select max concurrency: "
-read MAX_PROCS
+read -r MAX_PROCS
 
 save_selected_jails "${SELECTED_VERSIONS}" "${SELECTED_ARCHS}"
 
 # Stream workers through xargs
-cat ${SAVED_JAILS_FILE} | xargs -n1 -P${MAX_PROCS} ./build_worker.sh
+cat "${SAVED_JAILS_FILE}" | xargs -n1 -P"${MAX_PROCS}" ./build_worker.sh
 
-./notify.sh $(./db_get_shared_link.sh $(get_canonical_port_name $(cat ${SAVED_PORT_FILE})))
+./notify.sh "$(./db_get_shared_link.sh "$(get_canonical_port_name "$(cat "${SAVED_PORT_FILE}")")")"
 
 cleanup
