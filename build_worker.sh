@@ -30,16 +30,21 @@ print_build_result()
 ################################################################
 upload_logs()
 {
-	local upload_dir=$(get_canonical_port_name ${PORT_NAME})
-	local port_name=$(echo ${upload_dir} | cut -f1 -d'-')
-	local port_version=$(echo ${upload_dir} | cut -f2 -d'-')
-	local logs_dir="${LOGS_BASE}/${port_name}/${port_version}"
+	local upload_dir
+	local port_name
+	local port_version
+	local logs_dir
 
-	./db_upload_file.sh "${logs_dir}/${JAIL_NAME}-${PORTS_COLLECTION}.log" ${upload_dir} &>/dev/null
+	upload_dir=$(get_canonical_port_name "${PORT_NAME}")
+	port_name=$(echo "${upload_dir}" | cut -f1 -d'-')
+	port_version=$(echo "${upload_dir}" | cut -f2 -d'-')
+	logs_dir="${LOGS_BASE}/${port_name}/${port_version}"
+
+	./db_upload_file.sh "${logs_dir}/${JAIL_NAME}-${PORTS_COLLECTION}.log" "${upload_dir}" &>/dev/null
 }
 
 JAIL_NAME=$1
-PORT_NAME=$(cat $SAVED_PORT_FILE)
+PORT_NAME=$(cat "$SAVED_PORT_FILE")
 STATUS_FILE="${JAIL_NAME}"_exit_status
 POUDRIERE_CMD="poudriere testport -p ${PORTS_COLLECTION} -j ${JAIL_NAME} -o ${PORT_NAME} && touch ${STATUS_FILE}"
 WINDOW_TITLE="-T ${PORT_NAME}_[${JAIL_NAME}]"
@@ -62,5 +67,5 @@ print_build_result "${JAIL_NAME}" "${ret_str}"
 
 ./notify.sh "${PORT_NAME} build on ${JAIL_NAME} finished [$ret_str]" &> /dev/null
 
-rm ${STATUS_FILE} 2>/dev/null
+rm "${STATUS_FILE}" 2>/dev/null
 
