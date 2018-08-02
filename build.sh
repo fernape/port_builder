@@ -71,9 +71,9 @@ cleanup()
 ########################################
 select_port()
 {
-	echo -n "Select port: "
-	read -r PORT
-	echo "${PORT}" > "${SAVED_PORT_FILE}"
+	echo -n "Select port(s): "
+	read -r PORTS
+	echo "${PORTS}" | tr ' ' '\n' > "${SAVED_PORT_FILE}"
 }
 
 ########################################
@@ -146,9 +146,13 @@ read -r MAX_PROCS
 
 save_selected_jails "${SELECTED_VERSIONS}" "${SELECTED_ARCHS}"
 
-# Stream workers through xargs
-cat "${SAVED_JAILS_FILE}" | xargs -n1 -P"${MAX_PROCS}" ./build_worker.sh
-
-./notify.sh "$(./db_get_shared_link.sh "$(get_canonical_port_name "$(cat "${SAVED_PORT_FILE}")")")"
+for port in $(cat "${SAVED_PORT_FILE}"); do
+	# Stream workers through xargs
+	cat "${SAVED_JAILS_FILE}" | xargs -n1 -P"${MAX_PROCS}" ./build_worker.sh
+	./notify.sh "$(./db_get_shared_link.sh "$(get_canonical_port_name "${port}")")"
+	# Delete first line from file (already processed)
+	tail -n +2 "${SAVED_PORT_FILE}" > "${SAVED_PORT_FILE}.tmp"
+	mv "${SAVED_PORT_FILE}.tmp" "${SAVED_PORT_FILE}"
+done
 
 cleanup
