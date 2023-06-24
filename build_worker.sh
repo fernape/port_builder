@@ -15,9 +15,9 @@ print_build_result()
 	local build_result=${2}
 
 	if [[ "${build_result}" == "OK"  ]]; then
-		echo -e "${jail_name} done [${C_GREEN}OK${C_RESTORE}]"
+		echo -e "${jail_name} done [${C_GREEN}OK${C_RESTORE}] $(date +%H:%M:%S)"
 	else
-		echo -e "${jail_name} done [${C_RED}FAILED${C_RESTORE}]"
+		echo -e "${jail_name} done [${C_RED}FAILED${C_RESTORE}] $(date +%H:%M:%S)"
 	fi
 
 }
