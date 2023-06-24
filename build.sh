@@ -145,6 +145,11 @@ echo
 echo -n "Select max concurrency: "
 read -r MAX_PROCS
 
+
+echo
+echo -n "Power off when finished? [y/n] (default y): "
+read -r POWEROFF
+
 save_selected_jails "${SELECTED_VERSIONS}" "${SELECTED_ARCHS}"
 
 for port in $(cat "${SAVED_PORT_FILE}"); do
@@ -157,3 +162,7 @@ for port in $(cat "${SAVED_PORT_FILE}"); do
 done
 
 cleanup
+
+if [[ "${POWEROFF}" = "y" || "${POWEROFF}" = "Y" ]]; then
+	shutdown -p now
+fi
