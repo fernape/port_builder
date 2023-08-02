@@ -145,10 +145,21 @@ echo
 echo -n "Select max concurrency: "
 read -r MAX_PROCS
 
+if [[ -z ${MAX_PROCS} ]]; then
+	  MAX_PROCS=1
+fi
 
 echo
 echo -n "Power off when finished? [y/n] (default y): "
 read -r POWEROFF
+
+echo
+echo -n "Delay? [seconds] (default 0): "
+read -r DELAY
+
+if [[ "${DELAY}" ]]; then
+	sleep "${DELAY}"
+fi
 
 save_selected_jails "${SELECTED_VERSIONS}" "${SELECTED_ARCHS}"
 

@@ -46,7 +46,7 @@ upload_logs()
 JAIL_NAME=$1
 PORT_NAME=$(head -n1 "$SAVED_PORT_FILE")
 STATUS_FILE="${JAIL_NAME}"_exit_status
-POUDRIERE_CMD="poudriere testport -p ${PORTS_COLLECTION} -j ${JAIL_NAME} -o ${PORT_NAME} && touch ${STATUS_FILE}"
+POUDRIERE_CMD="poudriere testport -J4 -p ${PORTS_COLLECTION} -j ${JAIL_NAME} -o ${PORT_NAME} && touch ${STATUS_FILE}"
 WINDOW_TITLE="-T ${PORT_NAME}_[${JAIL_NAME}]"
 
 # Ensure we don't have a status file from a past compilation
