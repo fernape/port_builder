@@ -150,7 +150,7 @@ if [[ -z ${MAX_PROCS} ]]; then
 fi
 
 echo
-echo -n "Power off when finished? [y/n] (default y): "
+echo -n "Power off when finished? [y/n] (default n): "
 read -r POWEROFF
 
 echo
