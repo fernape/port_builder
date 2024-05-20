@@ -23,7 +23,7 @@ print_versions()
 ########################################
 print_archs()
 {
-	poudriere jails -l | awk '{print $3}' |  grep -v ARCH | sort -u \
+	poudriere jails -l | awk '{print $4}' |  grep -v ARCH | sort -u \
 		| tr '\n' ' ' | sed -e 's/ $//g'
 }
 
