@@ -53,7 +53,7 @@ rm "${STATUS_FILE}" 2>/dev/null
 
 echo "Building ${PORT_NAME} for ${JAIL_NAME}... "
 
-${TERMINAL_CMD}"${POUDRIERE_CMD}"" ${WINDOW_TITLE}"
+${TERMINAL_CMD} ${WINDOW_TITLE} -e "${POUDRIERE_CMD}"
 
 ret_str="${FAIL_STR}"
 

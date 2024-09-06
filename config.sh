@@ -12,7 +12,7 @@ PORTS_BASE=/usr/local/poudriere/ports/${PORTS_COLLECTION}/
 LOGS_BASE=/usr/local/poudriere/data/logs/bulk/latest-per-pkg/
 
 #TERMINAL_CMD="terminology --exec "
-TERMINAL_CMD="xterm -e "
+TERMINAL_CMD="xterm "
 CURL_BIN="$(whereis -q curl | cut -f1 -d' ')"
 
 C_RED="\e[31m"
