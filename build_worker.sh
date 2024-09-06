@@ -14,12 +14,11 @@ print_build_result()
 	local jail_name=${1}
 	local build_result=${2}
 
-	if [[ "${build_result}" == "OK"  ]]; then
+	if [[ "${build_result}" == "${SUCCESS_STR}"  ]]; then
 		echo -e "${jail_name} done [${C_GREEN}OK${C_RESTORE}] $(date +%H:%M:%S)"
 	else
 		echo -e "${jail_name} done [${C_RED}FAILED${C_RESTORE}] $(date +%H:%M:%S)"
 	fi
-
 }
 
 ################################################################
@@ -56,10 +55,10 @@ echo "Building ${PORT_NAME} for ${JAIL_NAME}... "
 
 ${TERMINAL_CMD}"${POUDRIERE_CMD}"" ${WINDOW_TITLE}"
 
-ret_str="FAILED"
+ret_str="${FAIL_STR}"
 
 if [[ -f ${STATUS_FILE} ]]; then
-	ret_str="OK"
+	ret_str="${SUCCESS_STR}"
 fi
 
 upload_logs

@@ -18,3 +18,6 @@ CURL_BIN="$(whereis -q curl | cut -f1 -d' ')"
 C_RED="\e[31m"
 C_GREEN="\e[32m"
 C_RESTORE="\e[0m"
+
+FAIL_STR=$(printf "FAILED \u26D4")
+SUCCESS_STR=$(printf "OK \u2705")
